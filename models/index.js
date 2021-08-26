@@ -1,12 +1,20 @@
-function withAuth(req, res, next){
-    console.log('with auth')
-    const { logged_in} = req.session;
-    if (!logged_in){
-      console.log('not logged in')
-      return res.redirect('/');
-    }
-    console.log('logged in')
-    next();
-  }
-  
-  module.exports = withAuth;
+const User = require('./User');
+const Post = require('./Post');
+const Comment   = require('./Comment');
+
+User.hasMany(Post, Comment, {
+  foreignKey: 'user_id',
+  onDelete: 'CASCADE'
+});
+
+Post.belongsTo(User, {
+  foreignKey: 'user_id',
+  onDelete: 'CASCADE'
+});
+
+Comment.belongsTo(User, {
+  foreignKey: 'user_id',
+  onDelete: 'CASCADE'
+});
+
+module.exports = { User, Post, Comment };
